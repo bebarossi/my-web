@@ -154,18 +154,18 @@
 /* IntersectionObserver reveal system */
 .reveal-item {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  transform: translateY(48px) scale(0.98);
+  transition: opacity 0.9s cubic-bezier(0.25, 0.4, 0.25, 1), transform 0.9s cubic-bezier(0.25, 0.4, 0.25, 1);
 }
 
 .reveal-item.revealed {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
-.reveal-item.delay-1 { transition-delay: 120ms; }
-.reveal-item.delay-2 { transition-delay: 240ms; }
-.reveal-item.delay-3 { transition-delay: 360ms; }
+.reveal-item.delay-1 { transition-delay: 150ms; }
+.reveal-item.delay-2 { transition-delay: 300ms; }
+.reveal-item.delay-3 { transition-delay: 450ms; }
 
 /* Hide scrollbar for carousels */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
