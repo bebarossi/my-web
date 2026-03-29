@@ -9,86 +9,43 @@ import { ArrowRight, AlertTriangle, Clock, EyeOff, Settings, Upload, BarChart3, 
    Sfondo scroll-driven con blob indigo — analogo al ScrollBackground
    della home ma con palette blu/indigo
 ═══════════════════════════════════════════════════════════════ */
-const PageBackground = () => {
-  const { scrollYProgress } = useScroll();
+const PageBackground = () => (
+  <div className="fixed inset-0 pointer-events-none z-0" aria-hidden="true">
+    {/* Base gradient — bianco freddo uniforme */}
+    <div className="absolute inset-0" style={{ background: 'linear-gradient(160deg, #f0f2ff 0%, #ffffff 50%, #f5f3ff 100%)' }} />
 
-  // Il gradiente sfuma verso bianco puro oltre il 55% dello scroll
-  const bg = useTransform(
-    scrollYProgress,
-    [0, 0.25, 0.45, 0.60, 1],
-    [
-      'linear-gradient(180deg, rgba(238,242,255,0.60) 0%, rgba(255,255,255,1) 100%)',
-      'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(238,242,255,0.50) 100%)',
-      'linear-gradient(180deg, rgba(238,242,255,0.45) 0%, rgba(255,255,255,1) 100%)',
-      'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%)',
-      'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%)',
-    ]
-  );
-
-  /* Blob 1 — indigo scuro: scompare oltre il 55% */
-  const b1x = useTransform(scrollYProgress, [0, 1], ['3%',  '63%']);
-  const b1y = useTransform(scrollYProgress, [0, 1], ['-3%', '57%']);
-  const b1s = useTransform(scrollYProgress, [0, 0.45, 1], [1,    1.65, 0.88]);
-  const b1o = useTransform(scrollYProgress, [0, 0.20, 0.45, 0.60, 1], [0.22, 0.30, 0.18, 0.04, 0]);
-
-  /* Blob 2 — indigo medio */
-  const b2x = useTransform(scrollYProgress, [0, 1], ['76%', '13%']);
-  const b2y = useTransform(scrollYProgress, [0, 1], ['8%',  '53%']);
-  const b2s = useTransform(scrollYProgress, [0, 0.5, 1], [0.85, 1.45, 1.75]);
-  const b2o = useTransform(scrollYProgress, [0, 0.25, 0.45, 0.60, 1], [0.16, 0.24, 0.14, 0.03, 0]);
-
-  /* Blob 3 — violet accent */
-  const b3x = useTransform(scrollYProgress, [0, 1], ['39%', '77%']);
-  const b3y = useTransform(scrollYProgress, [0, 1], ['67%', '11%']);
-  const b3s = useTransform(scrollYProgress, [0, 0.5, 1], [1,    0.72, 1.45]);
-  const b3o = useTransform(scrollYProgress, [0, 0.35, 0.50, 0.62, 1], [0.11, 0.18, 0.10, 0.02, 0]);
-
-  /* Blob 4 — lavanda chiaro */
-  const b4x = useTransform(scrollYProgress, [0, 1], ['52%', '27%']);
-  const b4y = useTransform(scrollYProgress, [0, 1], ['29%', '73%']);
-  const b4s = useTransform(scrollYProgress, [0, 0.5, 1], [0.76, 1.24, 0.60]);
-  const b4o = useTransform(scrollYProgress, [0, 0.30, 0.48, 0.60, 1], [0.08, 0.15, 0.08, 0.02, 0]);
-
-  const gridO = useTransform(scrollYProgress, [0, 0.40, 0.58, 1], [0.04, 0.022, 0.005, 0]);
-
-  return (
-    <div className="fixed inset-0 pointer-events-none z-0" aria-hidden="true">
-      <motion.div className="absolute inset-0" style={{ background: bg }} />
-
-      {/* Blob 1 */}
-      <motion.div className="absolute w-[800px] h-[800px] rounded-full"
-        style={{ left: b1x, top: b1y, scale: b1s, opacity: b1o,
-          background: 'radial-gradient(circle, #4f46e5, transparent 70%)',
-          filter: 'blur(95px)', translateX: '-50%', translateY: '-50%' }}
-      />
-      {/* Blob 2 */}
-      <motion.div className="absolute w-[660px] h-[660px] rounded-full"
-        style={{ left: b2x, top: b2y, scale: b2s, opacity: b2o,
-          background: 'radial-gradient(circle, #6366f1, transparent 70%)',
-          filter: 'blur(115px)', translateX: '-50%', translateY: '-50%' }}
-      />
-      {/* Blob 3 */}
-      <motion.div className="absolute w-[510px] h-[510px] rounded-full"
-        style={{ left: b3x, top: b3y, scale: b3s, opacity: b3o,
-          background: 'radial-gradient(circle, #818cf8, transparent 70%)',
-          filter: 'blur(75px)', translateX: '-50%', translateY: '-50%' }}
-      />
-      {/* Blob 4 */}
-      <motion.div className="absolute w-[360px] h-[360px] rounded-full"
-        style={{ left: b4x, top: b4y, scale: b4s, opacity: b4o,
-          background: 'radial-gradient(circle, #a5b4fc, transparent 70%)',
-          filter: 'blur(65px)', translateX: '-50%', translateY: '-50%' }}
-      />
-
-      {/* Dot grid */}
-      <motion.div className="absolute inset-0"
-        style={{ opacity: gridO,
-          backgroundImage: 'radial-gradient(circle, rgba(79,70,229,0.35) 1px, transparent 1px)',
-          backgroundSize: '40px 40px' }}
-      />
-    </div>
-  );
-};
+    {/* Blob 1 — indigo scuro in alto a sinistra */}
+    <div className="absolute w-[900px] h-[900px] rounded-full"
+      style={{ left: '0%', top: '-10%',
+        background: 'radial-gradient(circle, #4f46e5, transparent 70%)',
+        filter: 'blur(110px)', opacity: 0.12, transform: 'translate(-30%, -20%)' }}
+    />
+    {/* Blob 2 — indigo medio in alto a destra */}
+    <div className="absolute w-[700px] h-[700px] rounded-full"
+      style={{ left: '80%', top: '5%',
+        background: 'radial-gradient(circle, #6366f1, transparent 70%)',
+        filter: 'blur(120px)', opacity: 0.10, transform: 'translate(-50%, -30%)' }}
+    />
+    {/* Blob 3 — violet accent al centro */}
+    <div className="absolute w-[600px] h-[600px] rounded-full"
+      style={{ left: '50%', top: '40%',
+        background: 'radial-gradient(circle, #818cf8, transparent 70%)',
+        filter: 'blur(100px)', opacity: 0.08, transform: 'translate(-50%, -50%)' }}
+    />
+    {/* Blob 4 — lavanda in basso a destra */}
+    <div className="absolute w-[500px] h-[500px] rounded-full"
+      style={{ left: '75%', top: '75%',
+        background: 'radial-gradient(circle, #a5b4fc, transparent 70%)',
+        filter: 'blur(90px)', opacity: 0.09, transform: 'translate(-50%, -50%)' }}
+    />
+    {/* Blob 5 — indigo in basso a sinistra */}
+    <div className="absolute w-[450px] h-[450px] rounded-full"
+      style={{ left: '10%', top: '80%',
+        background: 'radial-gradient(circle, #4f46e5, transparent 70%)',
+        filter: 'blur(100px)', opacity: 0.07, transform: 'translate(-30%, -50%)' }}
+    />
+  </div>
+);
 
 /* ═══════════════════════════════════════════════════════════════
    Varianti condivise

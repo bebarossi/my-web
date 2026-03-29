@@ -10,6 +10,7 @@ import BudgetOverviewTab    from './BudgetOverviewTab';
 import BudgetAnalysisTab    from './BudgetAnalysisTab';
 import BudgetPerformanceTab from './BudgetPerformanceTab';
 import BudgetForecastTab    from './BudgetForecastTab';
+import BudgetMonitoringTab  from './BudgetMonitoringTab';
 
 /* ── Sidebar section config ─────────────────────────────────────── */
 const sidebarSections = [
@@ -51,7 +52,7 @@ const sidebarSections = [
   {
     group: 'Budget & Monitoring',
     items: [
-      { id: 'monitoring', label: 'Budget & Monitoring', Icon: Activity, locked: true },
+      { id: 'monitoring', label: 'Budget & Monitoring', Icon: Activity, locked: false },
     ],
   },
 ];
@@ -73,49 +74,18 @@ const BudgetDashboard = () => {
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[110%] h-full"
           style={{
-            background: 'radial-gradient(ellipse at 50% 20%, rgba(46,125,50,0.07) 0%, transparent 65%)',
+            background: 'radial-gradient(ellipse at 50% 20%, rgba(79,70,229,0.07) 0%, transparent 65%)',
           }}
         />
         <div
           className="absolute bottom-0 right-0 w-[50%] h-[60%]"
           style={{
-            background: 'radial-gradient(ellipse at 80% 100%, rgba(76,175,80,0.05) 0%, transparent 60%)',
+            background: 'radial-gradient(ellipse at 80% 100%, rgba(99,102,241,0.05) 0%, transparent 60%)',
           }}
         />
       </motion.div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
-
-        {/* ── Heading con line-reveal ── */}
-        <motion.div
-          className="mb-8 sm:mb-12 text-center md:text-left"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.01 }}
-        >
-          <div className="overflow-hidden mb-2">
-            <motion.h2
-              id="heading-budget"
-              className="text-3xl sm:text-4xl md:text-5xl font-bold text-dark"
-              initial={{ y: '100%' }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.85, ease: [0.25, 0.4, 0.25, 1] }}
-            >
-              ECAI-Budget
-            </motion.h2>
-          </div>
-          <motion.p
-            className="text-muted text-base sm:text-lg"
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.7, delay: 0.25, ease: [0.25, 0.4, 0.25, 1] }}
-          >
-            Controllo di gestione intelligente in tempo reale
-          </motion.p>
-        </motion.div>
 
         {/* ── Dashboard card con scala+slide ── */}
         <motion.div
@@ -242,6 +212,7 @@ const BudgetDashboard = () => {
                 {activeTab === 'ripartizioni' && <BudgetAnalysisTab />}
                 {activeTab === 'performance'  && <BudgetPerformanceTab />}
                 {activeTab === 'whatif'       && <BudgetForecastTab />}
+                {activeTab === 'monitoring'   && <BudgetMonitoringTab />}
               </div>
             </div>
           </div>

@@ -8,6 +8,7 @@ import {
   ClipboardList, Upload, Bot, Phone, BookOpen, Handshake,
 } from 'lucide-react';
 import { useState } from 'react';
+import VsmeWidget from '../sections/vsme/VsmeWidget';
 
 /* ═══════════════════════════════════════════════════════════════
    Sfondo scroll-driven con blob verdi — identico alla home,
@@ -213,175 +214,55 @@ const HeroSection = () => {
 /* ═══════════════════════════════════════════════════════════════
    Dashboard Live
 ═══════════════════════════════════════════════════════════════ */
-const DashboardSection = () => {
-  const [activeModule, setActiveModule] = useState('forza-lavoro');
-  const currentData    = moduleData[activeModule] || moduleData['forza-lavoro'];
-  const completionTotal = Math.round(modules.reduce((sum, m) => sum + m.pct, 0) / modules.length);
+const DashboardSection = () => (
+  <section id="dashboard" className="py-16 sm:py-24 relative overflow-hidden">
 
-  return (
-    <section id="dashboard" className="py-16 sm:py-24 relative overflow-hidden">
+    {/* Glow ambientale */}
+    <motion.div
+      className="absolute inset-0 pointer-events-none -z-10"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: '-100px' }}
+      transition={{ duration: 1.6, ease: 'easeOut' }}
+    >
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[110%] h-full"
+        style={{ background: 'radial-gradient(ellipse at 50% 20%, rgba(46,125,50,0.07) 0%, transparent 65%)' }} />
+    </motion.div>
 
-      {/* Glow ambientale */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none -z-10"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: 1.6, ease: 'easeOut' }}
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
+
+      {/* Heading */}
+      <motion.div className="mb-8 sm:mb-12 text-center"
+        initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: '-80px' }} transition={{ duration: 0.01 }}
       >
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[110%] h-full"
-          style={{ background: 'radial-gradient(ellipse at 50% 20%, rgba(46,125,50,0.07) 0%, transparent 65%)' }} />
+        <div className="overflow-hidden mb-2">
+          <motion.h2
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-dark"
+            initial={{ y: '100%' }}
+            whileInView={{ y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.85, ease: [0.25, 0.4, 0.25, 1] }}
+          >
+            La Piattaforma
+          </motion.h2>
+        </div>
+        <motion.p
+          className="text-muted text-base sm:text-lg"
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7, delay: 0.25, ease: [0.25, 0.4, 0.25, 1] }}
+        >
+          Sostenibilità e compliance ESG semplificate
+        </motion.p>
       </motion.div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
-
-        {/* Heading con line-reveal */}
-        <motion.div className="mb-8 sm:mb-12 text-center"
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: '-80px' }} transition={{ duration: 0.01 }}
-        >
-          <div className="overflow-hidden mb-2">
-            <motion.h2
-              className="text-3xl sm:text-4xl md:text-5xl font-bold text-dark"
-              initial={{ y: '100%' }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.85, ease: [0.25, 0.4, 0.25, 1] }}
-            >
-              La Piattaforma
-            </motion.h2>
-          </div>
-          <motion.p
-            className="text-muted text-base sm:text-lg"
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.7, delay: 0.25, ease: [0.25, 0.4, 0.25, 1] }}
-          >
-            Sostenibilità e compliance ESG semplificate
-          </motion.p>
-        </motion.div>
-
-        {/* Card dashboard con scale+slide */}
-        <motion.div
-          className="glass-card-strong rounded-3xl border border-black/5 shadow-glass-xl overflow-hidden"
-          initial={{ opacity: 0, y: 65, scale: 0.97 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.95, delay: 0.18, ease: [0.25, 0.4, 0.25, 1] }}
-        >
-          {/* Mac chrome */}
-          <div className="flex items-center gap-2 px-5 py-3 bg-gray-50 border-b border-black/5">
-            <div className="w-3 h-3 rounded-full bg-[#FF5F56]" />
-            <div className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
-            <div className="w-3 h-3 rounded-full bg-[#27C93F]" />
-            <span className="ml-3 text-xs text-muted font-mono">www.econova.ai — VSME Report</span>
-          </div>
-
-          <div className="grid lg:grid-cols-3 gap-6 sm:gap-8 items-stretch p-6 sm:p-8">
-            {/* Sidebar moduli */}
-            <div className="lg:col-span-1 space-y-3">
-              <div className="bg-white rounded-2xl p-6 border border-black/5 shadow-glass">
-                <h4 className="font-semibold text-dark mb-4 text-sm">Moduli ESG</h4>
-                <div className="space-y-2">
-                  {modules.map((module) => {
-                    const ModuleIcon = module.icon;
-                    return (
-                      <button
-                        key={module.id}
-                        onClick={() => setActiveModule(module.id)}
-                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium text-sm ${
-                          activeModule === module.id
-                            ? 'bg-accent text-white shadow-lg'
-                            : 'bg-gray-50 text-dark hover:bg-gray-100'
-                        }`}
-                      >
-                        <ModuleIcon className="w-4 h-4 flex-shrink-0" />
-                        <span className="flex-1 text-left">{module.name}</span>
-                        <span className={`text-xs font-bold ${activeModule === module.id ? 'text-white' : 'text-accent'}`}>
-                          {module.pct}%
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl p-6 border border-black/5 shadow-glass">
-                <h4 className="font-semibold text-dark mb-4 text-sm">Completamento Totale</h4>
-                <div className="mb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-2xl font-bold text-accent">{completionTotal}%</span>
-                  </div>
-                  <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
-                    <div
-                      className="bg-gradient-to-r from-accent to-accentLime h-full rounded-full transition-all duration-300"
-                      style={{ width: `${completionTotal}%` }}
-                    />
-                  </div>
-                </div>
-                <p className="text-xs text-muted">Implementazione compliance CSRD</p>
-              </div>
-            </div>
-
-            {/* Contenuto modulo */}
-            <div className="lg:col-span-2 space-y-6">
-              <div className="bg-gradient-to-r from-accent to-accentLime rounded-2xl p-8 sm:p-10 text-white shadow-glass-lg overflow-hidden relative">
-                <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
-                <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-white/5 rounded-full blur-3xl" />
-                <div className="relative z-10">
-                  <div className="flex items-start gap-4 mb-6">
-                    <div className="p-3 bg-white/20 rounded-xl">
-                      {React.createElement(currentData.icon, { className: 'w-8 h-8' })}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-2xl sm:text-3xl font-bold mb-2">{currentData.title}</h3>
-                      <p className="text-white/90">{currentData.subtitle}</p>
-                    </div>
-                  </div>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 rounded-full text-sm font-medium">
-                    <Target className="w-4 h-4" />
-                    Modulo attivo
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid sm:grid-cols-3 gap-4">
-                {currentData.metrics.map((metric, i) => (
-                  <div key={i} className="bg-white rounded-xl border border-black/5 p-6 shadow-glass hover:shadow-glass-lg transition-shadow">
-                    <p className="text-xs text-muted uppercase tracking-wider font-mono mb-2">{metric.label}</p>
-                    <p className="text-2xl sm:text-3xl font-bold text-dark mb-1">{metric.value}</p>
-                    <p className="text-xs text-muted">{metric.unit}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="bg-white rounded-xl border border-black/5 p-6 sm:p-8 shadow-glass">
-                <h4 className="font-semibold text-dark mb-6">Status Compliance</h4>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
-                    <div className="flex items-center gap-3">
-                      <Shield className="w-5 h-5 text-green-600" />
-                      <span className="text-sm font-medium text-dark">VSME — Compliance verificata</span>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-green-600" />
-                  </div>
-                  <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <div className="flex items-center gap-3">
-                      <FileText className="w-5 h-5 text-[#0071e3]" />
-                      <span className="text-sm font-medium text-dark">Report Audit — Pronto per esportazione</span>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-[#0071e3]" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
+      {/* New faithful VSME widget */}
+      <VsmeWidget />
+    </div>
+  </section>
+);
 
 /* ═══════════════════════════════════════════════════════════════
    Percorso in 6 Step

@@ -1,112 +1,167 @@
-import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
+/*
+ * Posizioni scroll reali (misurate):
+ *  0.00 – 0.34  → Hero + ProductsOverview
+ *  0.34 – 0.51  → BudgetDashboard  ← ZONA BLU/INDIGO
+ *  0.51 – 0.76  → VsmeDashboard    ← RITORNO VERDE
+ *  0.76 – 1.00  → WhySection + CTA
+ *
+ * Strategia performance:
+ *  - NON animare stringhe gradient (Framer non le interpola, snappa)
+ *  - Usare layer sovrapposti con solo opacity (compositing GPU)
+ *  - Blob statici (no left/top animati = no layout repaints)
+ *  - will-change: opacity su ogni layer animato
+ */
+
 const ScrollBackground = () => {
-  const ref = useRef(null);
   const { scrollYProgress } = useScroll();
 
-  // Background rimane sempre su toni verdi/crema — niente grigi o neri
-  const bg = useTransform(
+  /* ── Layer colore base ── */
+  // Layer verde
+  const greenOpacity = useTransform(
     scrollYProgress,
-    [0, 0.3, 0.65, 1],
-    [
-      'linear-gradient(180deg, rgba(232,245,233,0.55) 0%, rgba(255,255,255,1) 100%)',
-      'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(241,248,241,1) 100%)',
-      'linear-gradient(180deg, rgba(241,248,241,1) 0%, rgba(225,242,225,0.9) 100%)',
-      'linear-gradient(180deg, rgba(220,237,200,0.75) 0%, rgba(200,230,201,0.55) 100%)',
-    ]
+    [0,    0.26,  0.34,  0.51,  0.62,  1],
+    [0.55, 0.20,  0.00,  0.10,  0.65,  0.50]
   );
 
-  // Blob 1 — grande, top-left → center-right
-  const blob1X = useTransform(scrollYProgress, [0, 1], ['4%', '62%']);
-  const blob1Y = useTransform(scrollYProgress, [0, 1], ['-2%', '58%']);
-  const blob1Scale = useTransform(scrollYProgress, [0, 0.45, 1], [1, 1.65, 0.9]);
-  const blob1Opacity = useTransform(scrollYProgress, [0, 0.2, 0.6, 1], [0.22, 0.30, 0.20, 0.12]);
+  // Layer blu/indigo
+  const blueOpacity = useTransform(
+    scrollYProgress,
+    [0,    0.26,  0.34,  0.43,  0.51,  0.60,  1],
+    [0.00, 0.00,  0.55,  0.85,  0.55,  0.00,  0.00]
+  );
 
-  // Blob 2 — medio, top-right → left-mid
-  const blob2X = useTransform(scrollYProgress, [0, 1], ['76%', '14%']);
-  const blob2Y = useTransform(scrollYProgress, [0, 1], ['8%', '52%']);
-  const blob2Scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.85, 1.45, 1.75]);
-  const blob2Opacity = useTransform(scrollYProgress, [0, 0.25, 0.7, 1], [0.16, 0.24, 0.22, 0.14]);
+  /* ── Blob verdi — posizioni fisse, solo opacity ── */
+  const blobG1Opacity = useTransform(
+    scrollYProgress,
+    [0,    0.26,  0.34,  0.51,  0.62,  1],
+    [0.22, 0.26,  0.04,  0.08,  0.24,  0.14]
+  );
+  const blobG2Opacity = useTransform(
+    scrollYProgress,
+    [0,    0.28,  0.36,  0.52,  0.65,  1],
+    [0.16, 0.20,  0.03,  0.07,  0.22,  0.14]
+  );
+  const blobG3Opacity = useTransform(
+    scrollYProgress,
+    [0,    0.30,  0.38,  0.53,  0.68,  1],
+    [0.12, 0.16,  0.02,  0.08,  0.22,  0.15]
+  );
 
-  // Blob 3 — lime accent, si muove in diagonale verso l'alto
-  const blob3X = useTransform(scrollYProgress, [0, 1], ['38%', '78%']);
-  const blob3Y = useTransform(scrollYProgress, [0, 1], ['68%', '12%']);
-  const blob3Scale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.72, 1.45]);
-  const blob3Opacity = useTransform(scrollYProgress, [0, 0.35, 0.75, 1], [0.12, 0.20, 0.24, 0.16]);
+  /* ── Blob indigo — appaiono solo nella zona ECAI-Budget ── */
+  const blobI1Opacity = useTransform(
+    scrollYProgress,
+    [0.26,  0.34,  0.43,  0.51,  0.59],
+    [0.00,  0.18,  0.28,  0.18,  0.00]
+  );
+  const blobI2Opacity = useTransform(
+    scrollYProgress,
+    [0.28,  0.36,  0.44,  0.52,  0.60],
+    [0.00,  0.15,  0.22,  0.15,  0.00]
+  );
+  const blobI3Opacity = useTransform(
+    scrollYProgress,
+    [0.30,  0.38,  0.45,  0.53,  0.60],
+    [0.00,  0.12,  0.18,  0.12,  0.00]
+  );
 
-  // Blob 4 — piccolo, zona centrale
-  const blob4X = useTransform(scrollYProgress, [0, 1], ['52%', '28%']);
-  const blob4Y = useTransform(scrollYProgress, [0, 1], ['28%', '72%']);
-  const blob4Scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.75, 1.25, 0.6]);
-  const blob4Opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.09, 0.18, 0.14, 0.06]);
-
-  // Dot grid — segue lo scroll
+  /* ── Dot grid ── */
   const gridOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.045, 0.028, 0.012]);
 
   return (
-    <div ref={ref} className="fixed inset-0 pointer-events-none z-0" aria-hidden="true">
+    <div className="fixed inset-0 pointer-events-none z-0" aria-hidden="true">
 
-      {/* Gradient background dinamico */}
-      <motion.div className="absolute inset-0" style={{ background: bg }} />
+      {/* Base bianca */}
+      <div className="absolute inset-0 bg-white" />
 
-      {/* Blob 1 — verde scuro */}
+      {/* Layer verde */}
       <motion.div
-        className="absolute w-[800px] h-[800px] rounded-full"
+        className="absolute inset-0"
         style={{
-          left: blob1X,
-          top: blob1Y,
-          scale: blob1Scale,
-          opacity: blob1Opacity,
-          background: 'radial-gradient(circle, #2e7d32, transparent 70%)',
-          filter: 'blur(95px)',
-          translateX: '-50%',
-          translateY: '-50%',
+          opacity: greenOpacity,
+          background: 'linear-gradient(180deg, rgba(220,240,220,1) 0%, rgba(200,232,200,0.85) 100%)',
+          willChange: 'opacity',
         }}
       />
 
-      {/* Blob 2 — verde medio */}
+      {/* Layer blu/indigo */}
       <motion.div
-        className="absolute w-[660px] h-[660px] rounded-full"
+        className="absolute inset-0"
         style={{
-          left: blob2X,
-          top: blob2Y,
-          scale: blob2Scale,
-          opacity: blob2Opacity,
-          background: 'radial-gradient(circle, #4caf50, transparent 70%)',
-          filter: 'blur(115px)',
-          translateX: '-50%',
-          translateY: '-50%',
+          opacity: blueOpacity,
+          background: 'linear-gradient(180deg, rgba(235,238,255,1) 0%, rgba(224,228,255,0.95) 100%)',
+          willChange: 'opacity',
         }}
       />
 
-      {/* Blob 3 — verde lime */}
+      {/* ── Blob verdi — posizioni fisse ── */}
       <motion.div
-        className="absolute w-[510px] h-[510px] rounded-full"
+        className="absolute w-[720px] h-[720px] rounded-full"
         style={{
-          left: blob3X,
-          top: blob3Y,
-          scale: blob3Scale,
-          opacity: blob3Opacity,
-          background: 'radial-gradient(circle, #34c759, transparent 70%)',
-          filter: 'blur(75px)',
-          translateX: '-50%',
-          translateY: '-50%',
+          left: '8%', top: '18%',
+          opacity: blobG1Opacity,
+          background: 'radial-gradient(circle, rgba(46,125,50,0.55) 0%, transparent 70%)',
+          filter: 'blur(88px)',
+          transform: 'translate(-50%, -50%) translateZ(0)',
+          willChange: 'opacity',
+        }}
+      />
+      <motion.div
+        className="absolute w-[580px] h-[580px] rounded-full"
+        style={{
+          left: '78%', top: '35%',
+          opacity: blobG2Opacity,
+          background: 'radial-gradient(circle, rgba(76,175,80,0.50) 0%, transparent 70%)',
+          filter: 'blur(100px)',
+          transform: 'translate(-50%, -50%) translateZ(0)',
+          willChange: 'opacity',
+        }}
+      />
+      <motion.div
+        className="absolute w-[460px] h-[460px] rounded-full"
+        style={{
+          left: '42%', top: '72%',
+          opacity: blobG3Opacity,
+          background: 'radial-gradient(circle, rgba(52,199,89,0.45) 0%, transparent 70%)',
+          filter: 'blur(72px)',
+          transform: 'translate(-50%, -50%) translateZ(0)',
+          willChange: 'opacity',
         }}
       />
 
-      {/* Blob 4 — verde chiaro / accento */}
+      {/* ── Blob indigo — zona ECAI-Budget ── */}
       <motion.div
-        className="absolute w-[360px] h-[360px] rounded-full"
+        className="absolute w-[780px] h-[780px] rounded-full"
         style={{
-          left: blob4X,
-          top: blob4Y,
-          scale: blob4Scale,
-          opacity: blob4Opacity,
-          background: 'radial-gradient(circle, #a5d6a7, transparent 70%)',
-          filter: 'blur(65px)',
-          translateX: '-50%',
-          translateY: '-50%',
+          left: '18%', top: '42%',
+          opacity: blobI1Opacity,
+          background: 'radial-gradient(circle, rgba(79,70,229,0.45) 0%, transparent 70%)',
+          filter: 'blur(105px)',
+          transform: 'translate(-50%, -50%) translateZ(0)',
+          willChange: 'opacity',
+        }}
+      />
+      <motion.div
+        className="absolute w-[600px] h-[600px] rounded-full"
+        style={{
+          left: '74%', top: '38%',
+          opacity: blobI2Opacity,
+          background: 'radial-gradient(circle, rgba(99,102,241,0.40) 0%, transparent 70%)',
+          filter: 'blur(110px)',
+          transform: 'translate(-50%, -50%) translateZ(0)',
+          willChange: 'opacity',
+        }}
+      />
+      <motion.div
+        className="absolute w-[400px] h-[400px] rounded-full"
+        style={{
+          left: '50%', top: '48%',
+          opacity: blobI3Opacity,
+          background: 'radial-gradient(circle, rgba(129,140,248,0.38) 0%, transparent 70%)',
+          filter: 'blur(82px)',
+          transform: 'translate(-50%, -50%) translateZ(0)',
+          willChange: 'opacity',
         }}
       />
 
@@ -117,6 +172,7 @@ const ScrollBackground = () => {
           opacity: gridOpacity,
           backgroundImage: 'radial-gradient(circle, rgba(46,125,50,0.38) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
+          willChange: 'opacity',
         }}
       />
     </div>
