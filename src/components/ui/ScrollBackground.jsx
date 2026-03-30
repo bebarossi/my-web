@@ -1,73 +1,66 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 /*
- * Posizioni scroll reali (misurate):
- *  0.00 – 0.34  → Hero + ProductsOverview
- *  0.34 – 0.51  → BudgetDashboard  ← ZONA BLU/INDIGO
- *  0.51 – 0.76  → VsmeDashboard    ← RITORNO VERDE
- *  0.76 – 1.00  → WhySection + CTA
- *
- * Strategia performance:
- *  - NON animare stringhe gradient (Framer non le interpola, snappa)
- *  - Usare layer sovrapposti con solo opacity (compositing GPU)
- *  - Blob statici (no left/top animati = no layout repaints)
- *  - will-change: opacity su ogni layer animato
+ * Posizioni scroll MISURATE (scrollHeight 5118px):
+ *  0.00 – 0.133 → Hero
+ *  0.133 – 0.345 → ProductsOverview
+ *  0.345 – 0.507 → BudgetDashboard  ← ZONA BLU
+ *  0.507 – 0.780 → VsmeDashboard    ← ZONA VERDE
+ *  0.780 – 0.880 → WhySection
+ *  0.880 – 1.00  → CTASection
  */
 
 const ScrollBackground = () => {
   const { scrollYProgress } = useScroll();
 
-  /* ── Layer colore base ── */
-  // Layer verde
+  /* ── Layer colore base (flat, no gradient) ── */
+  // Verde: Hero + Products + VSME + Why
   const greenOpacity = useTransform(
     scrollYProgress,
-    [0,    0.26,  0.34,  0.51,  0.62,  1],
-    [0.55, 0.20,  0.00,  0.10,  0.65,  0.50]
+    [0,    0.20,  0.32,  0.345, 0.507, 0.54,  1],
+    [0.55, 0.22,  0.05,  0.00,  0.00,  0.55,  0.50]
   );
 
-  // Layer blu/indigo
+  // Blu: solo zona ECAI-Budget
   const blueOpacity = useTransform(
     scrollYProgress,
-    [0,    0.26,  0.34,  0.43,  0.51,  0.60,  1],
-    [0.00, 0.00,  0.55,  0.85,  0.55,  0.00,  0.00]
+    [0,    0.28,  0.345, 0.426, 0.507, 0.54,  1],
+    [0.00, 0.00,  0.65,  0.85,  0.65,  0.00,  0.00]
   );
 
   /* ── Blob verdi — posizioni fisse, solo opacity ── */
   const blobG1Opacity = useTransform(
     scrollYProgress,
-    [0,    0.26,  0.34,  0.51,  0.62,  1],
+    [0,    0.20,  0.345, 0.507, 0.54,  1],
     [0.22, 0.26,  0.04,  0.08,  0.24,  0.14]
   );
   const blobG2Opacity = useTransform(
     scrollYProgress,
-    [0,    0.28,  0.36,  0.52,  0.65,  1],
+    [0,    0.22,  0.345, 0.507, 0.56,  1],
     [0.16, 0.20,  0.03,  0.07,  0.22,  0.14]
   );
   const blobG3Opacity = useTransform(
     scrollYProgress,
-    [0,    0.30,  0.38,  0.53,  0.68,  1],
+    [0,    0.24,  0.345, 0.507, 0.58,  1],
     [0.12, 0.16,  0.02,  0.08,  0.22,  0.15]
   );
 
-  /* ── Blob indigo — appaiono solo nella zona ECAI-Budget ── */
+  /* ── Blob indigo — solo zona ECAI-Budget ── */
   const blobI1Opacity = useTransform(
     scrollYProgress,
-    [0.26,  0.34,  0.43,  0.51,  0.59],
+    [0.28,  0.345, 0.426, 0.507, 0.54],
     [0.00,  0.18,  0.28,  0.18,  0.00]
   );
   const blobI2Opacity = useTransform(
     scrollYProgress,
-    [0.28,  0.36,  0.44,  0.52,  0.60],
+    [0.29,  0.355, 0.430, 0.507, 0.54],
     [0.00,  0.15,  0.22,  0.15,  0.00]
   );
   const blobI3Opacity = useTransform(
     scrollYProgress,
-    [0.30,  0.38,  0.45,  0.53,  0.60],
+    [0.30,  0.365, 0.435, 0.507, 0.54],
     [0.00,  0.12,  0.18,  0.12,  0.00]
   );
-
-  /* ── Dot grid ── */
-  const gridOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.045, 0.028, 0.012]);
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0" aria-hidden="true">
@@ -80,7 +73,7 @@ const ScrollBackground = () => {
         className="absolute inset-0"
         style={{
           opacity: greenOpacity,
-          background: 'linear-gradient(180deg, rgba(220,240,220,1) 0%, rgba(200,232,200,0.85) 100%)',
+          background: 'rgba(220,240,220,1)',
           willChange: 'opacity',
         }}
       />
@@ -90,7 +83,7 @@ const ScrollBackground = () => {
         className="absolute inset-0"
         style={{
           opacity: blueOpacity,
-          background: 'linear-gradient(180deg, rgba(235,238,255,1) 0%, rgba(224,228,255,0.95) 100%)',
+          background: 'rgba(232,235,255,1)',
           willChange: 'opacity',
         }}
       />
@@ -165,16 +158,6 @@ const ScrollBackground = () => {
         }}
       />
 
-      {/* Dot grid sottile */}
-      <motion.div
-        className="absolute inset-0"
-        style={{
-          opacity: gridOpacity,
-          backgroundImage: 'radial-gradient(circle, rgba(46,125,50,0.38) 1px, transparent 1px)',
-          backgroundSize: '40px 40px',
-          willChange: 'opacity',
-        }}
-      />
     </div>
   );
 };

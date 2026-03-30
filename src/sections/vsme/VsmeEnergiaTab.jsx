@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Zap, CheckCircle, HelpCircle, Info, Car } from 'lucide-react';
+import { Zap, CheckCircle, HelpCircle, Info, Car, Sparkles } from 'lucide-react';
 
 const scope1 = [
   { fonte: 'Carbone',                  unita: 'kg'  },
@@ -94,12 +94,17 @@ const VsmeEnergiaTab = () => {
       </div>
 
       {/* Title row */}
-      <div className="flex items-center gap-3 mb-1">
+      <div className="flex items-center gap-3 mb-1 flex-wrap">
         <h2 className="text-2xl font-bold text-gray-900">Efficienza Energetica</h2>
         <button className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border-2 hover:opacity-80 transition-opacity"
           style={{ borderColor: '#2e7d32', color: '#2e7d32' }}>
           <CheckCircle className="w-3.5 h-3.5" />
           Segna completata
+        </button>
+        <button className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-white hover:opacity-90 transition-opacity"
+          style={{ background: 'linear-gradient(135deg, #7c3aed, #2e7d32)' }}>
+          <Sparkles className="w-3.5 h-3.5" />
+          Analizza bolletta con AI
         </button>
       </div>
       <p className="text-sm text-gray-400 mb-4">Emissioni Scope 1, Scope 2, fonti rinnovabili</p>

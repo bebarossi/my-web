@@ -61,31 +61,23 @@ const BudgetDashboard = () => {
   const [activeTab, setActiveTab] = useState('kpi');
 
   return (
-    <section id="budget" className="py-16 sm:py-24 md:py-28 relative overflow-hidden" aria-labelledby="heading-budget">
-
-      {/* ── Glow ambientale della sezione ── */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none -z-10"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: 1.6, ease: 'easeOut' }}
-      >
-        <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[110%] h-full"
-          style={{
-            background: 'radial-gradient(ellipse at 50% 20%, rgba(79,70,229,0.07) 0%, transparent 65%)',
-          }}
-        />
-        <div
-          className="absolute bottom-0 right-0 w-[50%] h-[60%]"
-          style={{
-            background: 'radial-gradient(ellipse at 80% 100%, rgba(99,102,241,0.05) 0%, transparent 60%)',
-          }}
-        />
-      </motion.div>
+    <section id="budget" className="py-16 sm:py-24 md:py-28 relative" aria-labelledby="heading-budget">
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
+
+        {/* Heading */}
+        <motion.div
+          className="mb-8 sm:mb-12 text-center lg:text-left"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7, ease: [0.25, 0.4, 0.25, 1] }}
+        >
+          <h2 id="heading-budget" className="text-3xl sm:text-4xl md:text-5xl font-bold text-dark mb-2">
+            ECAI-Budget
+          </h2>
+          <p className="text-muted text-base sm:text-lg">Controllo di gestione intelligente con AI</p>
+        </motion.div>
 
         {/* ── Dashboard card con scala+slide ── */}
         <motion.div
@@ -104,7 +96,7 @@ const BudgetDashboard = () => {
           </div>
 
           {/* Dashboard inner layout */}
-          <div className="flex min-h-[600px]">
+          <div className="flex h-[600px]">
 
             {/* ── Sidebar (desktop) ─────────────────────────────── */}
             <aside className="hidden md:flex w-56 flex-shrink-0 flex-col bg-[#1e1b4b]">

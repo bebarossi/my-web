@@ -72,7 +72,7 @@ const VsmeWidget = () => {
         <span className="ml-3 text-xs text-muted font-mono">vsme-dashboard.econova.ai — DEMO S.R.L.</span>
       </div>
 
-      <div className="flex min-h-[680px]">
+      <div className="flex h-[680px]">
 
         {/* ── Sidebar ─────────────────────────────────────────── */}
         <aside
