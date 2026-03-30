@@ -5,6 +5,13 @@ import Hero from './sections/Hero';
 import Footer from './components/layout/Footer';
 import ScrollBackground from './components/ui/ScrollBackground';
 
+/* Scroll to top on every route change (no hash) */
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+};
+
 /* Scroll to hash after route change (e.g. navigating from /ai-workstations to /#budget) */
 const ScrollToHash = () => {
   const { hash, pathname } = useLocation();
@@ -80,6 +87,7 @@ const LandingPage = () => (
 export default function App() {
   return (
     <div className="bg-white">
+      <ScrollToTop />
       <ScrollToHash />
       <Suspense fallback={<SectionFallback />}>
         <Routes>

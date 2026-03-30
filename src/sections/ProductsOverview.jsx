@@ -1,5 +1,8 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { ArrowRight, BarChart3, Zap, TrendingUp, Brain, Leaf, Trees, FileText, Shield } from 'lucide-react';
+
+const MotionLink = motion(Link);
 
 const cardVariants = {
   hidden:  { opacity: 0, y: 70, scale: 0.96 },
@@ -84,13 +87,13 @@ const ProductsOverview = () => (
                 </motion.div>
               ))}
             </div>
-            <motion.a
-              href="/ecai-budget"
+            <MotionLink
+              to="/ecai-budget"
               className="inline-flex items-center gap-2 text-accent font-semibold transition-all"
               whileHover={{ gap: '14px' }}
             >
               Scopri di più <ArrowRight className="w-4 h-4" />
-            </motion.a>
+            </MotionLink>
           </div>
         </motion.div>
 
@@ -135,13 +138,13 @@ const ProductsOverview = () => (
                 </motion.div>
               ))}
             </div>
-            <motion.a
-              href="/vsme-report"
+            <MotionLink
+              to="/vsme-report"
               className="inline-flex items-center gap-2 text-accent font-semibold transition-all"
               whileHover={{ gap: '14px' }}
             >
               Scopri di più <ArrowRight className="w-4 h-4" />
-            </motion.a>
+            </MotionLink>
           </div>
         </motion.div>
       </div>
