@@ -5,10 +5,16 @@ import Hero from './sections/Hero';
 import Footer from './components/layout/Footer';
 import ScrollBackground from './components/ui/ScrollBackground';
 
-/* Scroll to top on every route change (no hash) */
+/* Scroll to top on every route change */
 const ScrollToTop = () => {
   const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  useEffect(() => {
+    // Disable browser native scroll restoration to avoid conflicts
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [pathname]);
   return null;
 };
 
